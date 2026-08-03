@@ -5,6 +5,10 @@ plugins {
     id 'fabric-loom' version '1.5.2'
 }
 
+group = 'cc.astralis'
+version = '1.0.0'
+archivesBaseName = 'openastralis'
+
 repositories {
     mavenCentral()
     maven { url 'https://maven.fabricmc.net/' }
@@ -14,32 +18,64 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
     }
-    withJavadocJar()
     withSourcesJar()
+    withJavadocJar()
 }
 
-// Fabric Loom configuration for Minecraft 1.21.11
-loom {
-    // If your project uses an access widener, point to it here.
+sourceSets {
+    main {
+        java {
+            setSrcDirs(['java'])
+        }
+        resources {
+            setSrcDirs(['resources'])
+        }
+    }
 }
 
 dependencies {
-    // Minecraft and mappings
+    // Minecraft + mappings
     minecraft 'com.mojang:minecraft:1.21.11'
     mappings 'official'
 
-    // Fabric loader (adjust version if needed)
-    modImplementation 'net.fabricmc:fabric-loader:0.16.0'
+    // Fabric API (optional — only if your mod needs it)
+    modImplementation 'net.fabricmc.fabric-api:fabric-api:0.88.0+1.21.11'
 
-    // Common libraries you might need; adjust/remove as required
+    // Lombok is referenced in the code (e.g. @Getter)
+    compileOnly 'org.projectlombok:lombok:1.18.26'
+    annotationProcessor 'org.projectlombok:lombok:1.18.26'
+
     implementation 'org.jetbrains:annotations:24.0.1'
+}
+
+loom {
+    // If you use an access widener, uncomment and point to the file:
+    // accessWidener = file('resources/mymod.accesswidener')
+}
+
+tasks.processResources {
+    inputs.property 'version', project.version
+    filesMatching('fabric.mod.json') {
+        expand 'version': project.version
+    }
 }
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
+    options.release = 17
 }
 
-// Make a fat jar for distribution (optional)
+jar {
+    manifest {
+        attributes(
+            'Specification-Title': 'OpenAstralis',
+            'Specification-Vendor': 'nanomangotrkmnia',
+            'Implementation-Title': project.name,
+            'Implementation-Version': project.version
+        )
+    }
+}
+
 shadowJar {
     archiveClassifier.set('all')
     mergeServiceFiles()

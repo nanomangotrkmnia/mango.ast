@@ -1,0 +1,17 @@
+# Gradle & IDE
+/.gradle
+/build
+/.idea
+*.iml
+
+# OS
+.DS_Store
+
+# Intellij
+/out
+
+# Natives and assets
+/resources/natives
+
+# Gradle wrapper
+/gradle/wrapper/
