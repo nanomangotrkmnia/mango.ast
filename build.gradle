@@ -1,0 +1,54 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id 'fabric-loom' version '1.5.2'
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://maven.fabricmc.net/' }
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+    withJavadocJar()
+    withSourcesJar()
+}
+
+// Fabric Loom configuration for Minecraft 1.21.11
+loom {
+    // If your project uses an access widener, point to it here.
+}
+
+dependencies {
+    // Minecraft and mappings
+    minecraft 'com.mojang:minecraft:1.21.11'
+    mappings 'official'
+
+    // Fabric loader (adjust version if needed)
+    modImplementation 'net.fabricmc:fabric-loader:0.16.0'
+
+    // Common libraries you might need; adjust/remove as required
+    implementation 'org.jetbrains:annotations:24.0.1'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+// Make a fat jar for distribution (optional)
+shadowJar {
+    archiveClassifier.set('all')
+    mergeServiceFiles()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}
