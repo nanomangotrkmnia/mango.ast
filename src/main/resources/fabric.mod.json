@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "mango.ast",
+  "version": "${version}",
+  "name": "mango.ast",
+  "description": "mango.ast <3",
+  "authors": [
+    "Kawase",
+    "Ihassedic",
+    "Badaaiim"
+  ],
+  "contact": {
+    "homepage": "https://github.com/nanomangotrkmnia",
+    "sources": "https://nanomangotrkmnia.github.io/"
+  },
+  "license": "CC0-1.0",
+  "icon": "assets/mango.ast/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "mango.ast.Astralis"
+    ]
+  },
+  "mixins": [
+    "astralis.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "1.21.11",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}

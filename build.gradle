@@ -1,51 +1,65 @@
 plugins {
     id 'java'
     id 'maven-publish'
-    id 'com.github.johnrengelman.shadow' version '8.1.1'
-    id 'net.fabricmc.fabric-loom-remap' version '1.14'
+    id 'com.gradleup.shadow' version '8.3.6'
+    id 'net.fabricmc.fabric-loom-remap' version '1.14.10'
 }
 
-group = 'cc.astralis'
+group = 'mango.ast'
 version = '1.0.0'
-archivesBaseName = 'openastralis'
+base {
+    archivesName = 'openastralis'
+}
 
 repositories {
     mavenCentral()
     maven { url 'https://maven.fabricmc.net/' }
+    maven { url 'https://jitpack.io' }
 }
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(21)
     }
     withSourcesJar()
     withJavadocJar()
 }
 
-sourceSets {
-    main {
-        java {
-            setSrcDirs(['java'])
-        }
-        resources {
-            setSrcDirs(['resources'])
-        }
-    }
-}
-
 dependencies {
     // Minecraft + mappings
     minecraft 'com.mojang:minecraft:1.21.11'
-    mappings 'official'
+    mappings loom.officialMojangMappings()
 
-    // Fabric API (optional — only if your mod needs it)
-    modImplementation 'net.fabricmc.fabric-api:fabric-api:0.88.0+1.21.11'
+    // Fabric loader
+    modImplementation 'net.fabricmc:fabric-loader:0.16.14'
 
-    // Lombok is referenced in the code (e.g. @Getter)
-    compileOnly 'org.projectlombok:lombok:1.18.26'
-    annotationProcessor 'org.projectlombok:lombok:1.18.26'
+    // Fabric API
+    modImplementation 'net.fabricmc.fabric-api:fabric-api:0.141.6+1.21.11'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok:1.18.34'
+    annotationProcessor 'org.projectlombok:lombok:1.18.34'
 
     implementation 'org.jetbrains:annotations:24.0.1'
+
+    // Runtime / feature libraries (Maven Central)
+    implementation 'javazoom:jlayer:1.0.1'
+    implementation 'org.java-websocket:Java-WebSocket:1.5.7'
+    implementation 'org.apache.httpcomponents:httpclient:4.5.14'
+    implementation 'org.json:json:20240303'
+    implementation 'net.java.dev.jna:jna:5.14.0'
+    implementation 'org.ow2.asm:asm:9.7'
+    implementation 'org.ow2.asm:asm-commons:9.7'
+
+    // Skija (rendering)
+    implementation 'io.github.humbleui:skija-shared:0.116.8'
+
+    // Dear ImGui
+    implementation 'io.github.spair:imgui-java-binding:1.86.11'
+    implementation 'io.github.spair:imgui-java-lwjgl3:1.86.11'
+
+    // MixinExtras
+    implementation 'io.github.llamalad7:mixinextras-fabric:0.5.4'
 }
 
 loom {
@@ -62,7 +76,12 @@ tasks.processResources {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
-    options.release = 17
+    options.release = 21
+    options.compilerArgs += ['-Xmaxerrs', '500']
+}
+
+tasks.withType(Javadoc).configureEach {
+    options.addStringOption('Xdoclint:none', '-quiet')
 }
 
 jar {

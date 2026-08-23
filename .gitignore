@@ -11,7 +11,7 @@
 /out
 
 # Natives and assets
-/resources/natives
+/src/main/resources/natives
 
 # Gradle wrapper
 /gradle/wrapper/

@@ -1,0 +1,13 @@
+package mango.ast.event.events.impl.input;
+
+import mango.ast.event.events.Event;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+public class KeyboardEvent implements Event {
+    private final int keyCode;
+}

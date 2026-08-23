@@ -1,0 +1,17 @@
+package mango.ast.event.events.impl.input;
+
+import mango.ast.event.events.Event;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class ModifyMovementEvent implements Event {
+    private float movementSideways, movementForward;
+
+    public ModifyMovementEvent(float movementSideways, float movementForward) {
+        this.movementSideways = movementSideways;
+        this.movementForward = movementForward;
+    }
+}
