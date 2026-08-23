@@ -3,13 +3,11 @@ package astralis.mixin.player;
 import mango.ast.Astralis;
 import mango.ast.component.impl.player.RotationComponent;
 import mango.ast.interfaces.access.ILivingEntity;
-import mango.ast.event.events.impl.game.LoseSprintEvent;
 import mango.ast.module.impl.combat.ReachModule;
 import mango.ast.module.impl.movement.SafeWalkModule;
 import mango.ast.module.impl.movement.ScaffoldRecodeModule;
 import mango.ast.util.player.PlayerUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -40,34 +38,6 @@ public abstract class MixinPlayerEntity extends LivingEntity {
 
         ((ILivingEntity) this).serenium_setHeadYaw(yaw);
         ((ILivingEntity) this).serenium_setHeadPitch(pitch);
-    }
-
-    @Inject(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;setDeltaMovement(Lnet/minecraft/world/phys/Vec3;)V"), cancellable = true)
-    private void onSetVelocity(Entity target, CallbackInfo ci) {
-        if ((Object) this == Minecraft.getInstance().player) {
-            LoseSprintEvent sprintEvent = new LoseSprintEvent();
-
-            Astralis.getInstance().getEventManager().call(sprintEvent);
-
-            if (sprintEvent.isCancelled()) {
-                ci.cancel();
-            }
-        }
-    }
-
-    @Inject(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;setSprinting(Z)V"), cancellable = true)
-    private void onSetSprinting(Entity target, CallbackInfo ci) {
-        if ((Object) this == Minecraft.getInstance().player) {
-            Player player = (Player) (Object) this;
-            LoseSprintEvent sprintEvent = new LoseSprintEvent();
-
-            Astralis.getInstance().getEventManager().call(sprintEvent);
-
-            if (sprintEvent.isCancelled()) {
-                player.setSprinting(true);
-                ci.cancel();
-            }
-        }
     }
 
     @Inject(method = "isStayingOnGroundSurface", at = @At("HEAD"), cancellable = true)
