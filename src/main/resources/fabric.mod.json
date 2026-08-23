@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "mango.ast",
+  "id": "mango-ast",
   "version": "${version}",
   "name": "mango.ast",
   "description": "mango.ast <3",
