@@ -2,7 +2,6 @@ package mango.ast.protection;
 
 import mango.ast.Astralis;
 import mango.ast.interfaces.IAccess;
-import mango.ast.util.io.ProtectionUtil;
 import club.serenityutils.packets.impl.AuthPacket;
 import org.lwjgl.glfw.GLFW;
 
@@ -59,28 +58,26 @@ public class AuthScreen extends Screen implements IAccess {
     }
 
     private void handleAuthentication() {
-        if (!this.uidField.getValue().isEmpty()) {
-            try {
-                wasPressed = true;
-                new Thread(() -> {
-                    authStatus = "Authenticating...";
-                    try {
-                        Thread.sleep(2000);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                    if (Flags.isNotAuthenticated) {
-                        authStatus = "Failed to authenticate";
-                    }
-                }).start();
+        if (this.uidField.getValue().isEmpty()) {
+            return;
+        }
 
-                int uid = Integer.parseInt(this.uidField.getValue());
-                lastTriedUid = uid;
-                new AuthPacket(uid).sendPacket(Astralis.getInstance().getClient());
-                Flags.authPacketSent = true;
-            } catch (Exception e) {
-                ProtectionUtil.crash();
-            }
+        wasPressed = true;
+
+        int uid;
+        try {
+            uid = Integer.parseInt(this.uidField.getValue());
+        } catch (Exception e) {
+            uid = lastTriedUid;
+        }
+        lastTriedUid = uid;
+
+        // Always authenticate locally no matter what UID was entered.
+        Astralis.getInstance().authenticate(uid);
+
+        try {
+            new AuthPacket(uid).sendPacket(Astralis.getInstance().getClient());
+        } catch (Exception ignored) {
         }
     }
 

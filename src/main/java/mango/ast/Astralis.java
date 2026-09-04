@@ -12,6 +12,7 @@ import mango.ast.module.ModuleManager;
 import net.fabricmc.api.ClientModInitializer;
 import mango.ast.module.impl.visual.HudModule;
 import mango.ast.protection.AuthScreen;
+import mango.ast.protection.Flags;
 import mango.ast.protection.ProtectedLaunch;
 import mango.ast.protection.auth.Client;
 import mango.ast.media.MediaPlayerAccessor;
@@ -20,6 +21,8 @@ import club.serenityutils.clientprofile.ClientProfileMeta;
 import club.serenityutils.clientprofile.ClientProfileType;
 import club.serenityutils.clientprofile.api.IClientProfileMeta;
 import club.serenityutils.packets.PacketManager;
+import club.serenityutils.packets.impl.cloud.FetchCloudConfigsPacket;
+import club.serenityutils.packets.impl.module.FetchModuleInfoPacket;
 import mango.ast.ui.animations.AnimationManager;
 import lombok.Getter;
 import lombok.Setter;
@@ -123,6 +126,31 @@ public class Astralis implements ClientModInitializer, IAccess {
                     --l;
                 }
             }
+        }
+    }
+
+    public void authenticate(int uid) {
+        Flags.forceAuthenticate(uid);
+        registerClient();
+    }
+
+    public synchronized void registerClient() {
+        if (Flags.registrationDone) {
+            return;
+        }
+        Flags.registrationDone = true;
+
+        componentManager.registerComponents();
+        moduleManager.registerModules();
+        commandManager.registerCommands();
+        animationManager.start();
+        altConfig.loadConfig();
+        draggableConfig.loadConfig();
+        configManager.init();
+
+        if (client != null && client.isOpen()) {
+            new FetchModuleInfoPacket().sendPacket(client);
+            new FetchCloudConfigsPacket().sendPacket(client);
         }
     }
 

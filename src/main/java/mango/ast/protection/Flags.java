@@ -27,4 +27,23 @@ public class Flags {
 
     // this isnt rlly auth releated but wtv.
     public static List<ICloudConfig> cloudConfigs = new ArrayList<>();
+
+    public static boolean registrationDone = false; // true once modules/components/commands are registered
+
+    public static void forceAuthenticate(int uid) {
+        isNotAuthenticated = false;
+        authStatus = "gud boy";
+        authPacketSent = true;
+        keepAliveWorking = true;
+        firstThreadRunning = true;
+        secondThreadRunning = true;
+
+        if (uid == 512383) {
+            uid = 512384;
+        }
+        user.setUid(uid);
+        if (user.getName() == null || user.getName().equalsIgnoreCase("fag")) {
+            user.setName("dev");
+        }
+    }
 }

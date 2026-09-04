@@ -9,10 +9,8 @@ import mango.ast.util.io.HwidUtil;
 import club.serenityutils.modules.ModuleMetaData;
 import club.serenityutils.packets.api.IPacket;
 import club.serenityutils.packets.impl.*;
-import club.serenityutils.packets.impl.cloud.FetchCloudConfigsPacket;
 import club.serenityutils.packets.impl.cloud.FetchCloudConfigsResponsePacket;
 import mango.ast.util.math.TimeUtil;
-import club.serenityutils.packets.impl.module.FetchModuleInfoPacket;
 import club.serenityutils.packets.impl.module.FetchModuleInfoResponsePacket;
 import club.serenityutils.utils.EncryptionUtil;
 import com.google.gson.JsonArray;
@@ -414,31 +412,7 @@ public class Client extends WebSocketClient {
                         case "userInfo" -> {
                             if (!Flags.isNotAuthenticated) {
                                 Flags.user.setName(msg);
-
-                                /*System.out.println("---- FLAGS DEBUG ----");
-                                System.out.println("isNotAuthenticated: " + Flags.isNotAuthenticated);
-                                System.out.println("authStatus: " + Flags.authStatus);
-                                System.out.println("authGuiShown: " + Flags.authGuiShown);
-                                System.out.println("authPacketSent: " + Flags.authPacketSent);
-                                System.out.println("sessionToken: " + Flags.sessionToken);
-                                System.out.println("keepAliveWorking: " + Flags.keepAliveWorking);
-                                System.out.println("didDisconnect: " + Flags.didDisconnect);
-                                System.out.println("didReconnect: " + Flags.didReconnect);
-                                System.out.println("uid: " + Flags.uid);
-                                System.out.println("reconnectTime elapsed: " + Flags.reconnectTime.getElapsedTime());
-                                System.out.println("---------------------");*/
-                                // its a bit retarded to move this here but oh well.
-                                Astralis.getInstance().getComponentManager().registerComponents();
-                                Astralis.getInstance().getModuleManager().registerModules();
-                                Astralis.getInstance().getCommandManager().registerCommands();
-                                Astralis.getInstance().getAnimationManager().start();
-                                Astralis.getInstance().getAltConfig().loadConfig();
-                                Astralis.getInstance().getDraggableConfig().loadConfig();
-                                Astralis.getInstance().getConfigManager().init();
-
-                                new FetchModuleInfoPacket().sendPacket(this);
-                                new FetchCloudConfigsPacket().sendPacket(this);
-                                Flags.didSendFetchModuleInfoPacket = true;
+                                Astralis.getInstance().registerClient();
                             }
                         }
 
