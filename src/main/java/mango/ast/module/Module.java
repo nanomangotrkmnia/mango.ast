@@ -13,6 +13,7 @@ import mango.ast.property.properties.ClassModeProperty;
 import mango.ast.property.properties.TextProperty;
 import mango.ast.protection.Flags;
 import mango.ast.util.Data;
+import mango.ast.util.io.StringUtil;
 import club.serenityutils.modules.ModuleMetaData;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,6 +30,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @Setter
 public class Module extends Data implements IAccess, Fonts {
     public ModuleMetaData moduleMetaData = new ModuleMetaData("none", "none");
+    private String fallbackName;
     private final Category category;
     public int keyCode;
     private final List<Property<?>> propertyList = new ArrayList<>();
@@ -158,12 +160,27 @@ public class Module extends Data implements IAccess, Fonts {
     }
 
     public String getDesc() {
-        return moduleMetaData.getDescription();
+        final String description = moduleMetaData.getDescription();
+        return description == null || description.equals("none") ? "" : description;
     }
 
     // add crash.
     public String getName() {
-        return moduleMetaData.getName();
+        final String name = moduleMetaData.getName();
+        return name == null || name.equals("none") ? getFallbackName() : name;
+    }
+
+    private String getFallbackName() {
+        if (fallbackName == null) {
+            String simpleName = getClass().getSimpleName();
+            if (simpleName.endsWith("Module")) {
+                simpleName = simpleName.substring(0, simpleName.length() - "Module".length());
+            }
+
+            fallbackName = StringUtil.addSpaces(simpleName);
+        }
+
+        return fallbackName;
     }
 
     public void setSuffix(String suffix) {
