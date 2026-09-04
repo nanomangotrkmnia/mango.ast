@@ -23,11 +23,11 @@ import net.minecraft.client.renderer.fog.FogRenderer;
 @Mixin(FogRenderer.class)
 public abstract class MixinFogRenderer {
     @ModifyVariable(
-            method = "setupFog(Lnet/minecraft/client/Camera;IZLnet/minecraft/client/DeltaTracker;FLnet/minecraft/client/multiplayer/ClientLevel;)Lorg/joml/Vector4f;",
+            method = "setupFog(Lnet/minecraft/client/Camera;ILnet/minecraft/client/DeltaTracker;FLnet/minecraft/client/multiplayer/ClientLevel;)Lorg/joml/Vector4f;",
             at = @At("STORE"),
             ordinal = 0
     )
-    private Vector4f modifyFogColor(Vector4f original, Camera camera, int viewDistance, boolean thick, DeltaTracker tickCounter, float skyDarkness, ClientLevel world) {
+    private Vector4f modifyFogColor(Vector4f original, Camera camera, int viewDistance, DeltaTracker tickCounter, float skyDarkness, ClientLevel world) {
         AmbienceModule ambienceModule = Astralis.getInstance().getModuleManager().getModule(AmbienceModule.class);
         if (ambienceModule != null && ambienceModule.isToggled() && ambienceModule.fogshi.getProperty()) {
             Color c = ambienceModule.fogcolor.getProperty();
@@ -42,10 +42,10 @@ public abstract class MixinFogRenderer {
     }
 
     @Inject(
-            method = "setupFog(Lnet/minecraft/client/Camera;IZLnet/minecraft/client/DeltaTracker;FLnet/minecraft/client/multiplayer/ClientLevel;)Lorg/joml/Vector4f;",
+            method = "setupFog(Lnet/minecraft/client/Camera;ILnet/minecraft/client/DeltaTracker;FLnet/minecraft/client/multiplayer/ClientLevel;)Lorg/joml/Vector4f;",
             at = @At("TAIL")
     )
-    private void modifyFogDistance(Camera camera, int viewDistance, boolean thick, DeltaTracker tickCounter, float skyDarkness, ClientLevel world, CallbackInfoReturnable<Vector4f> cir) {
+    private void modifyFogDistance(Camera camera, int viewDistance, DeltaTracker tickCounter, float skyDarkness, ClientLevel world, CallbackInfoReturnable<Vector4f> cir) {
         AmbienceModule ambienceModule = Astralis.getInstance().getModuleManager().getModule(AmbienceModule.class);
         NoRenderModule noRenderModule = Astralis.getInstance().getModuleManager().getModule(NoRenderModule.class);
 
@@ -70,7 +70,7 @@ public abstract class MixinFogRenderer {
     }
 
     @Redirect(
-            method = "setupFog(Lnet/minecraft/client/Camera;IZLnet/minecraft/client/DeltaTracker;FLnet/minecraft/client/multiplayer/ClientLevel;)Lorg/joml/Vector4f;",
+            method = "setupFog(Lnet/minecraft/client/Camera;ILnet/minecraft/client/DeltaTracker;FLnet/minecraft/client/multiplayer/ClientLevel;)Lorg/joml/Vector4f;",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/renderer/fog/FogRenderer;updateBuffer(Ljava/nio/ByteBuffer;ILorg/joml/Vector4f;FFFFFF)V"

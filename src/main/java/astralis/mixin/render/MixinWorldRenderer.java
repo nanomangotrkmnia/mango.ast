@@ -49,7 +49,7 @@ public class MixinWorldRenderer {
     }*/
 
     @Inject(method = "addWeatherPass", at = @At("HEAD"), cancellable = true)
-    public void renderoWeather(FrameGraphBuilder frameGraphBuilder, Vec3 cameraPos, GpuBufferSlice fogBuffer, CallbackInfo ci) {
+    public void renderoWeather(FrameGraphBuilder frameGraphBuilder, GpuBufferSlice fogBuffer, CallbackInfo ci) {
         NoRenderModule noRenderModule = Astralis.getInstance().getModuleManager().getModule(NoRenderModule.class);
         if (noRenderModule.isToggled() && noRenderModule.noWeather.getProperty()) {
             ci.cancel();
@@ -65,7 +65,7 @@ public class MixinWorldRenderer {
     }
 
     @Inject(method = "addCloudsPass", at = @At(value = "HEAD"), cancellable = true)
-    private void noClouds(FrameGraphBuilder frameGraphBuilder, CloudStatus mode, Vec3 cameraPos, float cloudPhase, int color, float cloudHeight, CallbackInfo ci) {
+    private void noClouds(FrameGraphBuilder frameGraphBuilder, CloudStatus mode, Vec3 cameraPos, long cloudPhase, float color, int cloudHeight, float fogAlpha, CallbackInfo ci) {
         NoRenderModule noRenderModule = Astralis.getInstance().getModuleManager().getModule(NoRenderModule.class);
         if (noRenderModule.isToggled() && noRenderModule.noClouds.getProperty()) {
             ci.cancel();

@@ -9,6 +9,7 @@ import mango.ast.event.EventManager;
 import mango.ast.friends.FriendManager;
 import mango.ast.interfaces.IAccess;
 import mango.ast.module.ModuleManager;
+import net.fabricmc.api.ClientModInitializer;
 import mango.ast.module.impl.visual.HudModule;
 import mango.ast.protection.AuthScreen;
 import mango.ast.protection.ProtectedLaunch;
@@ -32,9 +33,11 @@ import java.lang.reflect.Field;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Getter
-public class Astralis implements IAccess {
+public class Astralis implements ClientModInitializer, IAccess {
     @Getter
     private static final Astralis instance = new Astralis();
+
+    private boolean initialized;
     public static final Logger LOGGER = LoggerFactory.getLogger("mango.ast");
     public static final String NAME = "mango.ast", BY = "Developed by Kawase, Badaiim & IHasseDich";
     public static final double VERSION = 1.27;
@@ -59,8 +62,14 @@ public class Astralis implements IAccess {
     private Client client;
     private AuthScreen authScreen;
 
+    @Override
+    public void onInitializeClient() {
+        Astralis.getInstance().init();
+    }
+
     public void init() {
-      /*  LOGGER.info("initialized " + NAME + " With Success");*/
+        if (initialized) return;
+        initialized = true;
 
         File astralisDir = new File(mc.gameDirectory, "/" + NAME.toLowerCase());
         if (!astralisDir.exists()) {

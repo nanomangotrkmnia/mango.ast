@@ -25,6 +25,13 @@ java {
     withJavadocJar()
 }
 
+configurations {
+    // Third-party plain libraries that must be shaded into the mod jar so it
+    // runs standalone. Fabric's loader does not put arbitrary jars from the
+    // mods folder on a mod's classpath, so these need to be merged in.
+    bundle
+}
+
 dependencies {
     // Minecraft + mappings
     minecraft 'com.mojang:minecraft:1.21.11'
@@ -60,6 +67,23 @@ dependencies {
 
     // MixinExtras
     implementation 'io.github.llamalad7:mixinextras-fabric:0.5.4'
+
+    // The same plain libraries, resolved through 'bundle' so they get shaded in.
+    // (MixinExtras is excluded: it is a Fabric mod and is expected to be installed
+    // as its own jar, not baked into this one.)
+    ['javazoom:jlayer:1.0.1',
+     'org.java-websocket:Java-WebSocket:1.5.7',
+     'org.apache.httpcomponents:httpclient:4.5.14',
+     'org.json:json:20240303',
+     'net.java.dev.jna:jna:5.14.0',
+     'io.github.humbleui:skija-shared:0.116.8',
+     'io.github.humbleui:skija-windows-x64:0.116.8',
+     'io.github.spair:imgui-java-binding:1.86.11',
+     'io.github.spair:imgui-java-lwjgl3:1.86.11',
+     'io.github.spair:imgui-java-natives-windows:1.86.11',
+     'io.github.spair:imgui-java-natives-linux:1.86.11',
+     'io.github.spair:imgui-java-natives-macos:1.86.11',
+    ].each { add 'bundle', it }
 }
 
 loom {
@@ -85,19 +109,32 @@ tasks.withType(Javadoc).configureEach {
 }
 
 jar {
+    // Shade the bundled third-party libraries into the mod jar so it runs
+    // standalone. Loom's remapJar consumes this task's output, so the final
+    // artifact keeps these classes (and their native resources) merged in.
+    from { configurations.bundle.collect { it.isDirectory() ? it : zipTree(it) } }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
         attributes(
             'Specification-Title': 'OpenAstralis',
             'Specification-Vendor': 'nanomangotrkmnia',
             'Implementation-Title': project.name,
-            'Implementation-Version': project.version
+            'Implementation-Version': project.version,
+            // Skija is a multi-release jar: its Java 9+ override of Cleanable uses
+            // java.lang.ref.Cleaner, while the base version references the removed
+            // sun.misc.Cleaner. The JVM only honors META-INF/versions/** when this
+            // attribute is present.
+            'Multi-Release': 'true'
         )
     }
 }
 
 shadowJar {
+    zip64 = true
+    configurations = [project.configurations.bundle]
     archiveClassifier.set('all')
     mergeServiceFiles()
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 publishing {

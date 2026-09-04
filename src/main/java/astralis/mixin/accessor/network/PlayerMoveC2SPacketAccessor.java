@@ -7,25 +7,25 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(ServerboundMovePlayerPacket.class)
 public interface PlayerMoveC2SPacketAccessor {
-    @Accessor
+    @Accessor("x")
     double getX();
 
     @Mutable
-    @Accessor
+    @Accessor("x")
     void setX(double x);
 
-    @Accessor
+    @Accessor("y")
     double getY();
 
     @Mutable
-    @Accessor
+    @Accessor("y")
     void setY(double y);
 
-    @Accessor
+    @Accessor("z")
     double getZ();
 
     @Mutable
-    @Accessor
+    @Accessor("z")
     void setZ(double z);
 
     @Accessor

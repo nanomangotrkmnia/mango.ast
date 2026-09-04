@@ -1,6 +1,7 @@
 package astralis.mixin.player;
 
 import astralis.mixin.accessor.player.ClientPlayerEntityAccessor;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import mango.ast.event.events.impl.game.*;
 import mango.ast.event.events.impl.input.SprintingTickEndEvent;
@@ -80,19 +81,19 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayer imple
         return moveEvent.isCancelled() ? Vec3.ZERO : new Vec3(moveEvent.getX(), moveEvent.getY(), moveEvent.getZ());
     }
 
-    @Redirect(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isUsingItem()Z"))
-    private boolean onItemSlowdown(LocalPlayer player) {
+    @ModifyExpressionValue(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isSlowDueToUsingItem()Z"))
+    private boolean onItemSlowdown(boolean original) {
         SlowDownEvent slowDownEvent = new SlowDownEvent();
         Astralis.getInstance().getEventManager().call(slowDownEvent);
-        return !slowDownEvent.isCancelled() && player.isUsingItem();
+        return !slowDownEvent.isCancelled() && original;
     }
 
-    @Redirect(method = "canStartSprinting", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isUsingItem()Z"))
-    public boolean canStartSprinting(LocalPlayer clientPlayerEntity) {
+    @ModifyExpressionValue(method = "canStartSprinting", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isSlowDueToUsingItem()Z"))
+    private boolean canStartSprinting(boolean original) {
         SlowDownEvent slowDownEvent = new SlowDownEvent();
         Astralis.getInstance().getEventManager().call(slowDownEvent);
         return slowDownEvent.isCancelled() ?
-                false : clientPlayerEntity.isUsingItem();
+                false : original;
     }
 
     @ModifyReturnValue(method = "itemUseSpeedMultiplier", at = @At("RETURN"))
