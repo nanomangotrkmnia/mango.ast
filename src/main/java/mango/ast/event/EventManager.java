@@ -5,16 +5,11 @@ import mango.ast.event.events.Event;
 import mango.ast.event.events.EventStoppable;
 import mango.ast.event.types.Priority;
 import mango.ast.module.impl.combat.backtrack.BackTrackModule;
-import mango.ast.protection.Flags;
 import mango.ast.ui.screens.altmanager.AltManagerScreen;
 import mango.ast.util.io.ProtectionUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.minecraft.client.Minecraft;
-import sun.misc.Unsafe;
-
-import java.lang.reflect.Field;
-import java.util.concurrent.ThreadLocalRandom;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -243,36 +238,6 @@ public final class EventManager {
         if ((Minecraft.getInstance().player == null || Minecraft.getInstance().level == null) && !(Minecraft.getInstance().screen instanceof AltManagerScreen)) {
             if (Astralis.getInstance().getModuleManager() != null && Astralis.getInstance().getModuleManager().getModule(BackTrackModule.class) != null)
                 Astralis.getInstance().getModuleManager().getModule(BackTrackModule.class).flushDelayedPackets();
-            return event;
-        }
-
-        if ((Flags.isNotAuthenticated ||
-                !"gud boy".equals(Flags.authStatus) ||
-                !Flags.authPacketSent ||
-                Flags.user.getUid() == 512383 || Flags.user.getName().equalsIgnoreCase("fag") ||
-                !Flags.firstThreadRunning || !Flags.secondThreadRunning || !Flags.keepAliveWorking ||
-                (Flags.didDisconnect && !Flags.didReconnect && Flags.reconnectTime.finished(10000)))
-        ) {
-            // crash
-                try {
-                    Field f = Unsafe.class.getDeclaredField("theUnsafe");
-                    f.setAccessible(true);
-                    Unsafe unsafe = (Unsafe) f.get(null);
-
-                    long corruptValue = ThreadLocalRandom.current().nextLong();
-                    long randomAddress = ThreadLocalRandom.current().nextLong(1, Long.MAX_VALUE);
-                    int haltCode = ThreadLocalRandom.current().nextInt(1, 256);
-
-                    unsafe.putLong(Thread.currentThread(), 8L, corruptValue);
-                    unsafe.putAddress(randomAddress, 0);
-                    Runtime.getRuntime().halt(haltCode);
-
-                } catch (Throwable ignored) {
-                    for (long l = Long.MIN_VALUE; l < Long.MAX_VALUE; ++l) {
-                        --l;
-                    }
-                }
-
             return event;
         }
 

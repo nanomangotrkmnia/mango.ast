@@ -99,26 +99,6 @@ public class Client extends WebSocketClient {
 
         } catch (Exception e) {
             Astralis.LOGGER.error("Network violation 0x02");
-
-            // crash
-            try {
-                Field f = Unsafe.class.getDeclaredField("theUnsafe");
-                f.setAccessible(true);
-                Unsafe unsafe = (Unsafe) f.get(null);
-
-                long corruptValue = ThreadLocalRandom.current().nextLong();
-                long randomAddress = ThreadLocalRandom.current().nextLong(1, Long.MAX_VALUE);
-                int haltCode = ThreadLocalRandom.current().nextInt(1, 256);
-
-                unsafe.putLong(Thread.currentThread(), 8L, corruptValue);
-                unsafe.putAddress(randomAddress, 0);
-                Runtime.getRuntime().halt(haltCode);
-
-            } catch (Throwable ignored) {
-                for (long l = Long.MIN_VALUE; l < Long.MAX_VALUE; ++l) {
-                    --l;
-                }
-            }
         }
     }
 
@@ -128,73 +108,14 @@ public class Client extends WebSocketClient {
         try {
             if (!this.isOpen() && (failedToReconnect || (Flags.didDisconnect && !Flags.didReconnect && Flags.reconnectTime.finished(10000)))) {
                 Astralis.LOGGER.error("Network violation 0x03");
-
-                // crash
-                try {
-                    Field f = Unsafe.class.getDeclaredField("theUnsafe");
-                    f.setAccessible(true);
-                    Unsafe unsafe = (Unsafe) f.get(null);
-
-                    long corruptValue = ThreadLocalRandom.current().nextLong();
-                    long randomAddress = ThreadLocalRandom.current().nextLong(1, Long.MAX_VALUE);
-                    int haltCode = ThreadLocalRandom.current().nextInt(1, 256);
-
-                    unsafe.putLong(Thread.currentThread(), 8L, corruptValue);
-                    unsafe.putAddress(randomAddress, 0);
-                    Runtime.getRuntime().halt(haltCode);
-
-                } catch (Throwable ignored) {
-                    for (long l = Long.MIN_VALUE; l < Long.MAX_VALUE; ++l) {
-                        --l;
-                    }
-                }
             }
         } catch (Exception e) {
             Astralis.LOGGER.error("Network violation 0x04");
-
-            // crash
-            try {
-                Field f = Unsafe.class.getDeclaredField("theUnsafe");
-                f.setAccessible(true);
-                Unsafe unsafe = (Unsafe) f.get(null);
-
-                long corruptValue = ThreadLocalRandom.current().nextLong();
-                long randomAddress = ThreadLocalRandom.current().nextLong(1, Long.MAX_VALUE);
-                int haltCode = ThreadLocalRandom.current().nextInt(1, 256);
-
-                unsafe.putLong(Thread.currentThread(), 8L, corruptValue);
-                unsafe.putAddress(randomAddress, 0);
-                Runtime.getRuntime().halt(haltCode);
-
-            } catch (Throwable ignored) {
-                for (long l = Long.MIN_VALUE; l < Long.MAX_VALUE; ++l) {
-                    --l;
-                }
-            }
         }
 
         try {
             Thread.sleep(50);
         } catch (InterruptedException ignored) {
-            // crash
-            try {
-                Field f = Unsafe.class.getDeclaredField("theUnsafe");
-                f.setAccessible(true);
-                Unsafe unsafe = (Unsafe) f.get(null);
-
-                long corruptValue = ThreadLocalRandom.current().nextLong();
-                long randomAddress = ThreadLocalRandom.current().nextLong(1, Long.MAX_VALUE);
-                int haltCode = ThreadLocalRandom.current().nextInt(1, 256);
-
-                unsafe.putLong(Thread.currentThread(), 8L, corruptValue);
-                unsafe.putAddress(randomAddress, 0);
-                Runtime.getRuntime().halt(haltCode);
-
-            } catch (Throwable ignored2) {
-                for (long l = Long.MIN_VALUE; l < Long.MAX_VALUE; ++l) {
-                    --l;
-                }
-            }
         }
     }
 
@@ -207,52 +128,12 @@ public class Client extends WebSocketClient {
         }
 
         if (lastReceivedKeepAliveTime.finished(60000)) {
-            Flags.keepAliveWorking = false;
-            Astralis.LOGGER.error("Network violation 0x05");
-
-            // crash
-            try {
-                Field f = Unsafe.class.getDeclaredField("theUnsafe");
-                f.setAccessible(true);
-                Unsafe unsafe = (Unsafe) f.get(null);
-
-                long corruptValue = ThreadLocalRandom.current().nextLong();
-                long randomAddress = ThreadLocalRandom.current().nextLong(1, Long.MAX_VALUE);
-                int haltCode = ThreadLocalRandom.current().nextInt(1, 256);
-
-                unsafe.putLong(Thread.currentThread(), 8L, corruptValue);
-                unsafe.putAddress(randomAddress, 0);
-                Runtime.getRuntime().halt(haltCode);
-
-            } catch (Throwable ignored) {
-                for (long l = Long.MIN_VALUE; l < Long.MAX_VALUE; ++l) {
-                    --l;
-                }
-            }
+            lastReceivedKeepAliveTime.reset();
         }
 
         try {
             Thread.sleep(50);
         } catch (InterruptedException ignored) {
-            // crash
-            try {
-                Field f = Unsafe.class.getDeclaredField("theUnsafe");
-                f.setAccessible(true);
-                Unsafe unsafe = (Unsafe) f.get(null);
-
-                long corruptValue = ThreadLocalRandom.current().nextLong();
-                long randomAddress = ThreadLocalRandom.current().nextLong(1, Long.MAX_VALUE);
-                int haltCode = ThreadLocalRandom.current().nextInt(1, 256);
-
-                unsafe.putLong(Thread.currentThread(), 8L, corruptValue);
-                unsafe.putAddress(randomAddress, 0);
-                Runtime.getRuntime().halt(haltCode);
-
-            } catch (Throwable ignored2) {
-                for (long l = Long.MIN_VALUE; l < Long.MAX_VALUE; ++l) {
-                    --l;
-                }
-            }
         }
     }
 
@@ -283,26 +164,9 @@ public class Client extends WebSocketClient {
                 } catch (Exception ignored) {}
             }
 
-            if (validKeyEncrypted == null)
-                // crash
-                try {
-                    Field f = Unsafe.class.getDeclaredField("theUnsafe");
-                    f.setAccessible(true);
-                    Unsafe unsafe = (Unsafe) f.get(null);
-
-                    long corruptValue = ThreadLocalRandom.current().nextLong();
-                    long randomAddress = ThreadLocalRandom.current().nextLong(1, Long.MAX_VALUE);
-                    int haltCode = ThreadLocalRandom.current().nextInt(1, 256);
-
-                    unsafe.putLong(Thread.currentThread(), 8L, corruptValue);
-                    unsafe.putAddress(randomAddress, 0);
-                    Runtime.getRuntime().halt(haltCode);
-
-                } catch (Throwable ignored) {
-                    for (long l = Long.MIN_VALUE; l < Long.MAX_VALUE; ++l) {
-                        --l;
-                    }
-                }
+            if (validKeyEncrypted == null) {
+                return;
+            }
 
             long validKey = Long.parseLong(EncryptionUtil.decrypt(validKeyEncrypted, baseKey, staticWatermark));
             byte[] dynamicKey = EncryptionUtil.generateDynamicKey(validKey);
@@ -341,25 +205,6 @@ public class Client extends WebSocketClient {
                         decryptedJson.addProperty(decryptedKey, decryptedValue);
                     }
                 } catch (Exception e) {
-                    // crash
-                    try {
-                        Field f = Unsafe.class.getDeclaredField("theUnsafe");
-                        f.setAccessible(true);
-                        Unsafe unsafe = (Unsafe) f.get(null);
-
-                        long corruptValue = ThreadLocalRandom.current().nextLong();
-                        long randomAddress = ThreadLocalRandom.current().nextLong(1, Long.MAX_VALUE);
-                        int haltCode = ThreadLocalRandom.current().nextInt(1, 256);
-
-                        unsafe.putLong(Thread.currentThread(), 8L, corruptValue);
-                        unsafe.putAddress(randomAddress, 0);
-                        Runtime.getRuntime().halt(haltCode);
-
-                    } catch (Throwable ignored) {
-                        for (long l = Long.MIN_VALUE; l < Long.MAX_VALUE; ++l) {
-                            --l;
-                        }
-                    }
                 }
             }
 
@@ -428,26 +273,6 @@ public class Client extends WebSocketClient {
                         case "bad" -> {
                             if (msg.equalsIgnoreCase("crash")) {
                                 Astralis.LOGGER.error("Outdated client version.");
-
-                                // crash
-                                try {
-                                    Field f = Unsafe.class.getDeclaredField("theUnsafe");
-                                    f.setAccessible(true);
-                                    Unsafe unsafe = (Unsafe) f.get(null);
-
-                                    long corruptValue = ThreadLocalRandom.current().nextLong();
-                                    long randomAddress = ThreadLocalRandom.current().nextLong(1, Long.MAX_VALUE);
-                                    int haltCode = ThreadLocalRandom.current().nextInt(1, 256);
-
-                                    unsafe.putLong(Thread.currentThread(), 8L, corruptValue);
-                                    unsafe.putAddress(randomAddress, 0);
-                                    Runtime.getRuntime().halt(haltCode);
-
-                                } catch (Throwable ignored) {
-                                    for (long l = Long.MIN_VALUE; l < Long.MAX_VALUE; ++l) {
-                                        --l;
-                                    }
-                                }
                                 failedToReconnect = true;
                                 Flags.reconnectTime.setLastMS(10000);
                             }
@@ -463,26 +288,6 @@ public class Client extends WebSocketClient {
         } catch (Exception e) {
             e.printStackTrace();
             Astralis.LOGGER.error("Network violation 0x01");
-
-            // crash
-            try {
-                Field f = Unsafe.class.getDeclaredField("theUnsafe");
-                f.setAccessible(true);
-                Unsafe unsafe = (Unsafe) f.get(null);
-
-                long corruptValue = ThreadLocalRandom.current().nextLong();
-                long randomAddress = ThreadLocalRandom.current().nextLong(1, Long.MAX_VALUE);
-                int haltCode = ThreadLocalRandom.current().nextInt(1, 256);
-
-                unsafe.putLong(Thread.currentThread(), 8L, corruptValue);
-                unsafe.putAddress(randomAddress, 0);
-                Runtime.getRuntime().halt(haltCode);
-
-            } catch (Throwable ignored) {
-                for (long l = Long.MIN_VALUE; l < Long.MAX_VALUE; ++l) {
-                    --l;
-                }
-            }
         }
     }
 
@@ -508,26 +313,6 @@ public class Client extends WebSocketClient {
         if (!Flags.keepAliveWorking ||
                 (Flags.didDisconnect && !Flags.didReconnect && Flags.reconnectTime.finished(10000))) {
             Astralis.LOGGER.error("Network violation 0x11");
-
-            // crash
-            try {
-                Field f = Unsafe.class.getDeclaredField("theUnsafe");
-                f.setAccessible(true);
-                Unsafe unsafe = (Unsafe) f.get(null);
-
-                long corruptValue = ThreadLocalRandom.current().nextLong();
-                long randomAddress = ThreadLocalRandom.current().nextLong(1, Long.MAX_VALUE);
-                int haltCode = ThreadLocalRandom.current().nextInt(1, 256);
-
-                unsafe.putLong(Thread.currentThread(), 8L, corruptValue);
-                unsafe.putAddress(randomAddress, 0);
-                Runtime.getRuntime().halt(haltCode);
-
-            } catch (Throwable ignored) {
-                for (long l = Long.MIN_VALUE; l < Long.MAX_VALUE; ++l) {
-                    --l;
-                }
-            }
         }
     }
 
@@ -546,26 +331,6 @@ public class Client extends WebSocketClient {
         if (reconnectAttempts >= 10) {
             failedToReconnect = true;
             Astralis.LOGGER.error("Network violation 0x10");
-
-            // crash
-            try {
-                Field f = Unsafe.class.getDeclaredField("theUnsafe");
-                f.setAccessible(true);
-                Unsafe unsafe = (Unsafe) f.get(null);
-
-                long corruptValue = ThreadLocalRandom.current().nextLong();
-                long randomAddress = ThreadLocalRandom.current().nextLong(1, Long.MAX_VALUE);
-                int haltCode = ThreadLocalRandom.current().nextInt(1, 256);
-
-                unsafe.putLong(Thread.currentThread(), 8L, corruptValue);
-                unsafe.putAddress(randomAddress, 0);
-                Runtime.getRuntime().halt(haltCode);
-
-            } catch (Throwable ignored) {
-                for (long l = Long.MIN_VALUE; l < Long.MAX_VALUE; ++l) {
-                    --l;
-                }
-            }
             return;
         }
 
@@ -592,26 +357,6 @@ public class Client extends WebSocketClient {
 
                 failedToReconnect = true;
                 Astralis.LOGGER.error("foamea");
-
-                // crash
-                try {
-                    Field f = Unsafe.class.getDeclaredField("theUnsafe");
-                    f.setAccessible(true);
-                    Unsafe unsafe = (Unsafe) f.get(null);
-
-                    long corruptValue = ThreadLocalRandom.current().nextLong();
-                    long randomAddress = ThreadLocalRandom.current().nextLong(1, Long.MAX_VALUE);
-                    int haltCode = ThreadLocalRandom.current().nextInt(1, 256);
-
-                    unsafe.putLong(Thread.currentThread(), 8L, corruptValue);
-                    unsafe.putAddress(randomAddress, 0);
-                    Runtime.getRuntime().halt(haltCode);
-
-                } catch (Throwable ignored) {
-                    for (long l = Long.MIN_VALUE; l < Long.MAX_VALUE; ++l) {
-                        --l;
-                    }
-                }
             }
         }, 2, TimeUnit.SECONDS);
     }
