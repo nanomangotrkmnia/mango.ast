@@ -36,7 +36,7 @@ public class AuthScreen extends Screen implements IAccess {
         int centerX = this.width / 2;
         int centerY = this.height / 2;
 
-        uidField = new EditBox(this.font, centerX - 100, centerY - 10, 200, 20, Component.literal("UID"));
+        uidField = new EditBox(this.minecraft.font, centerX - 100, centerY - 10, 200, 20, Component.literal("UID"));
         uidField.setMaxLength(64);
         uidField.setHint(Component.literal("Enter UID"));
         this.addRenderableWidget(uidField);
@@ -109,14 +109,14 @@ public class AuthScreen extends Screen implements IAccess {
         int centerX = this.width / 2;
         int centerY = this.height / 2;
 
-        context.drawCenteredString(this.font, "Authentication Required", centerX, centerY - 40, 0xFFFFFF);
-        context.drawCenteredString(this.font, "Please enter your UID to continue", centerX, centerY - 26, 0xAAAAAA);
+        context.drawCenteredString(this.minecraft.font, "Authentication Required", centerX, centerY - 40, 0xFFFFFF);
+        context.drawCenteredString(this.minecraft.font, "Please enter your UID to continue", centerX, centerY - 26, 0xAAAAAA);
 
         if (wasPressed && Flags.isNotAuthenticated) {
-            context.drawCenteredString(this.font,
+            context.drawCenteredString(this.minecraft.font,
                     "Invalid UID / Invalid HWID. Please try again or create ticket.", centerX, centerY + 80, 0xFF4545);
         } else if (authStatus != null && authStatus.equals("Authenticating...")) {
-            context.drawCenteredString(this.font, authStatus, centerX, centerY + 80, 0xFFFFFF);
+            context.drawCenteredString(this.minecraft.font, authStatus, centerX, centerY + 80, 0xFFFFFF);
         }
 
         super.render(context, mouseX, mouseY, delta);
