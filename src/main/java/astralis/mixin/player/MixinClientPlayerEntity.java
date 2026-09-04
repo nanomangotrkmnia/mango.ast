@@ -1,6 +1,7 @@
 package astralis.mixin.player;
 
 import astralis.mixin.accessor.player.ClientPlayerEntityAccessor;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import mango.ast.event.events.impl.game.*;
 import mango.ast.event.events.impl.input.SprintingTickEndEvent;
 import com.mojang.authlib.GameProfile;
@@ -94,7 +95,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayer imple
                 false : clientPlayerEntity.isUsingItem();
     }
 
-    @ModifyConstant(method = "modifyInput", constant = @Constant(floatValue = 0.2F))
+    @ModifyReturnValue(method = "itemUseSpeedMultiplier", at = @At("RETURN"))
     private float modifyItemUseSlowdown(float original) {
         SlowDownEvent slowDownEvent = new SlowDownEvent();
         Astralis.getInstance().getEventManager().call(slowDownEvent);

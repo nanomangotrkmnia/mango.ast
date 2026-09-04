@@ -3,6 +3,7 @@ package astralis.mixin.player;
 import mango.ast.Astralis;
 import mango.ast.event.events.impl.game.movementcorrection.JumpCorrectionEvent;
 import mango.ast.interfaces.access.ILivingEntity;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import mango.ast.component.impl.player.RotationComponent;
 import mango.ast.module.impl.player.NoPushModule;
 import mango.ast.module.impl.visual.AnimationModule;
@@ -88,10 +89,10 @@ public abstract class MixinLivingEntity extends Entity implements ILivingEntity 
         return entity.getYRot();
     }
 
-    @ModifyConstant(method = "getCurrentSwingDuration", constant = @Constant(intValue = 6))
-    private int modifyHandSwingDuration(int constant) {
+    @ModifyReturnValue(method = "getCurrentSwingDuration", at = @At("RETURN"))
+    private int modifyHandSwingDuration(int original) {
         final AnimationModule module = Astralis.getInstance().getModuleManager().getModule(AnimationModule.class);
-        return module.isToggled() ? (int) ((double) constant / module.speed.getProperty().floatValue()) : constant;
+        return module.isToggled() ? (int) ((double) original / module.speed.getProperty().floatValue()) : original;
     }
 
     @Inject(method = "aiStep", at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/LivingEntity;lerpHeadSteps:I", ordinal = 2))

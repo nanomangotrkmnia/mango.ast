@@ -62,7 +62,7 @@ public class KillauraModule extends Module {
 
     public BooleanProperty autoBlock = new BooleanProperty("Auto Block", false);
     public final NumberProperty blockRange = new NumberProperty("Block Range", 3, 0, 6, 0.1f);
-    public ModeProperty autoBlockMode = new ModeProperty("Auto Block Mode", "Vanilla", "Vanilla", "None", "Blink", "Modern Watchdog", "Modern Watchdog Post", "Old Watchdog");
+    public ModeProperty autoBlockMode = new ModeProperty("Auto Block Mode", "Vanilla", "Vanilla", "None", "Fake", "Blink", "Modern Watchdog", "Modern Watchdog Post", "Old Watchdog");
     private final BooleanProperty blink = new BooleanProperty("Blink", false);
     private final BooleanProperty packetAutoBlock = new BooleanProperty("Packet Auto Block", false),
             interactWhenBlocking = new BooleanProperty("Interact When Blocking", false),
@@ -437,6 +437,12 @@ public class KillauraModule extends Module {
             case "Vanilla":
                 setBlockState(true);
                 break;
+            case "Fake":
+                // purely visual: render the blocking pose locally without
+                // sending any use/block packets or pressing the use key
+                renderBlockHit = true;
+                isBlocking = false;
+                break;
             case "Blink":
                 if (mc.player.tickCount % 2 == 0) {
                     Astralis.getInstance().getComponentManager().getComponent(BlinkComponent.class).stopBlinking();
@@ -714,6 +720,10 @@ public class KillauraModule extends Module {
         return (long) (1000 / (
                 RandomUtil.getAdvancedRandom(minCPS.getProperty().floatValue(), maxCPS.getProperty().floatValue()))
         );
+    }
+
+    public boolean isFakeVisualBlocking() {
+        return isToggled() && autoBlockMode.is("Fake") && shouldRenderFakeAnim();
     }
 
     public boolean shouldRenderFakeAnim() {

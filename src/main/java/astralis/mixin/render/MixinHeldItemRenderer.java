@@ -133,7 +133,7 @@ public abstract class MixinHeldItemRenderer implements IAccess {
         var item = instance.getMainHandItem().getItem();
 
         if (mc.player.getInventory().getSelectedItem().is(ItemTags.SWORDS) && (Astralis.getInstance().getModuleManager().getModule(KillauraModule.class).isToggled() &&
-                Astralis.getInstance().getModuleManager().getModule(KillauraModule.class).shouldRenderFakeAnim() || Minecraft.getInstance().options.keyUse.isDown()) && Astralis.getInstance().getModuleManager().getModule(AnimationModule.class).isToggled()) {
+                Astralis.getInstance().getModuleManager().getModule(KillauraModule.class).shouldRenderFakeAnim() || Minecraft.getInstance().options.keyUse.isDown()) && Astralis.getInstance().getModuleManager().getModule(AnimationModule.class).isToggled() || Astralis.getInstance().getModuleManager().getModule(KillauraModule.class).isFakeVisualBlocking()) {
             return true;
         }
 
@@ -149,7 +149,7 @@ public abstract class MixinHeldItemRenderer implements IAccess {
         var item = instance.getMainHandItem().getItem();
 
         if (mc.player.getInventory().getSelectedItem().is(ItemTags.SWORDS) && (Astralis.getInstance().getModuleManager().getModule(KillauraModule.class).isToggled() &&
-                Astralis.getInstance().getModuleManager().getModule(KillauraModule.class).shouldRenderFakeAnim() || Minecraft.getInstance().options.keyUse.isDown()) && Astralis.getInstance().getModuleManager().getModule(AnimationModule.class).isToggled()) {
+                Astralis.getInstance().getModuleManager().getModule(KillauraModule.class).shouldRenderFakeAnim() || Minecraft.getInstance().options.keyUse.isDown()) && Astralis.getInstance().getModuleManager().getModule(AnimationModule.class).isToggled() || Astralis.getInstance().getModuleManager().getModule(KillauraModule.class).isFakeVisualBlocking()) {
             return InteractionHand.MAIN_HAND;
         }
 
@@ -165,7 +165,7 @@ public abstract class MixinHeldItemRenderer implements IAccess {
         var item = instance.getMainHandItem().getItem();
 
         if (mc.player.getInventory().getSelectedItem().is(ItemTags.SWORDS) && (Astralis.getInstance().getModuleManager().getModule(KillauraModule.class).isToggled() &&
-                Astralis.getInstance().getModuleManager().getModule(KillauraModule.class).shouldRenderFakeAnim() || Minecraft.getInstance().options.keyUse.isDown()) && Astralis.getInstance().getModuleManager().getModule(AnimationModule.class).isToggled()) {
+                Astralis.getInstance().getModuleManager().getModule(KillauraModule.class).shouldRenderFakeAnim() || Minecraft.getInstance().options.keyUse.isDown()) && Astralis.getInstance().getModuleManager().getModule(AnimationModule.class).isToggled() || Astralis.getInstance().getModuleManager().getModule(KillauraModule.class).isFakeVisualBlocking()) {
             return 7200;
         }
 
